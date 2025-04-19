@@ -58,7 +58,7 @@ public class Main {
                     System.out.println("\nAll Available Flights:");
                     for (Flight flight : allFlights) {
                         System.out.println(flight);
-                        System.out.println("-------------------");
+                        System.out.println("--------------------------------------");
                     }
                     break;
                     

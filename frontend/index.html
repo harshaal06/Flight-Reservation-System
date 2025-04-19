@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Flight Reservation System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white min-h-screen flex flex-col items-center p-6">
+
+    <header class="w-full max-w-5xl mb-12">
+        <h1 class="text-6xl font-extrabold text-center text-blue-400 drop-shadow-xl tracking-wide">Flight Reservation System</h1>
+    </header>
+
+    <main class="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-10 mb-16">
+
+        <section id="search-flights" class="bg-gray-800 rounded-2xl shadow-xl p-8">
+            <h2 class="text-3xl font-bold mb-6 text-blue-300 border-b border-blue-500 pb-3">Search Flights</h2>
+            <form id="searchForm" class="space-y-6">
+                <div>
+                    <label for="departure" class="block mb-2 text-lg font-medium text-white">Departure City:</label>
+                    <input type="text" id="departure" name="departure" required
+                        class="w-full border border-gray-600 rounded-xl p-3 bg-gray-700 text-white focus:outline-none focus:ring-4 focus:ring-blue-400 transition" aria-describedby="departureError" />
+                    <p id="departureError" class="text-red-400 text-sm mt-1 hidden">Please enter a departure city.</p>
+                </div>
+                <div>
+                    <label for="destination" class="block mb-2 text-lg font-medium text-white">Destination City:</label>
+                    <input type="text" id="destination" name="destination" required
+                        class="w-full border border-gray-600 rounded-xl p-3 bg-gray-700 text-white focus:outline-none focus:ring-4 focus:ring-blue-400 transition" aria-describedby="destinationError" />
+                    <p id="destinationError" class="text-red-400 text-sm mt-1 hidden">Please enter a destination city.</p>
+                </div>
+                <button type="submit"
+                    class="w-full bg-blue-600 text-white text-lg font-bold py-3 rounded-xl hover:bg-blue-700 transition shadow-lg flex justify-center items-center gap-2">
+                    <svg id="searchLoading" class="animate-spin h-5 w-5 text-white hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+                    </svg>
+                    Search
+                </button>
+            </form>
+            <div id="searchResults" class="mt-6 space-y-4"></div>
+        </section>
+
+        <section id="make-reservation" class="bg-gray-800 rounded-2xl shadow-xl p-8">
+            <h2 class="text-3xl font-bold mb-6 text-blue-300 border-b border-blue-500 pb-3">Make Reservation</h2>
+            <form id="reservationForm" class="space-y-6">
+                <div>
+                    <label for="flightNumber" class="block mb-2 text-lg font-medium text-white">Flight Number:</label>
+                    <input type="text" id="flightNumber" name="flightNumber" required
+                        class="w-full border border-gray-600 rounded-xl p-3 bg-gray-700 text-white focus:outline-none focus:ring-4 focus:ring-blue-400 transition" aria-describedby="flightNumberError" />
+                    <p id="flightNumberError" class="text-red-400 text-sm mt-1 hidden">Please enter a flight number.</p>
+                </div>
+                <button type="submit"
+                    class="w-full bg-blue-600 text-white text-lg font-bold py-3 rounded-xl hover:bg-blue-700 transition shadow-lg flex justify-center items-center gap-2">
+                    <svg id="reserveLoading" class="animate-spin h-5 w-5 text-white hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+                    </svg>
+                    Reserve
+                </button>
+            </form>
+            <div id="reservationResult" class="mt-6 text-lg font-medium text-green-400"></div>
+        </section>
+
+        <section id="all-flights" class="bg-gray-800 rounded-2xl shadow-xl p-8 md:col-span-2">
+            <h2 class="text-3xl font-bold mb-6 text-blue-300 border-b border-blue-500 pb-3">All Available Flights</h2>
+            <button id="showAllFlightsBtn"
+                class="bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700 transition shadow-lg mb-6 flex justify-center items-center gap-2">
+                <svg id="allFlightsLoading" class="animate-spin h-5 w-5 text-white hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+                </svg>
+                Show All Flights
+            </button>
+            <div id="allFlightsList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"></div>
+        </section>
+
+    </main>
+
+    <footer class="w-full max-w-5xl text-center text-gray-400 mb-6 text-sm">
+        &copy; 2024 Flight Reservation System. All rights reserved.
+    </footer>
+
+    <script>
+        const flightsData = [
+            { flightNumber: "NM10", departure: "Nagpur", destination: "Mumbai", departureTime: "10:00 AM", arrivalTime: "01:00 PM", availableSeats: 50, price: 499.99 },
+            { flightNumber: "NP11", departure: "Nagpur", destination: "Pune", departureTime: "11:00 PM", arrivalTime: "1:30 AM", availableSeats: 150, price: 399.99 },
+            { flightNumber: "ND09", departure: "Nagpur", destination: "Delhi", departureTime: "9:00 AM", arrivalTime: "2:00 PM", availableSeats: 100, price: 899.99 },
+            { flightNumber: "MD12", departure: "Mumbai", destination: "Delhi", departureTime: "7:00 AM", arrivalTime: "9:30 AM", availableSeats: 120, price: 599.99 },
+            { flightNumber: "MC14", departure: "Mumbai", destination: "Chennai", departureTime: "5:00 PM", arrivalTime: "7:00 PM", availableSeats: 90, price: 499.99 },
+            { flightNumber: "DM15", departure: "Delhi", destination: "Mumbai", departureTime: "8:00 AM", arrivalTime: "10:30 AM", availableSeats: 110, price: 599.99 },
+            { flightNumber: "DN17", departure: "Delhi", destination: "Nagpur", departureTime: "3:00 PM", arrivalTime: "5:00 PM", availableSeats: 100, price: 549.99 },
+            { flightNumber: "ID20", departure: "Delhi", destination: "Dubai", departureTime: "8:00 PM", arrivalTime: "10:30 PM", availableSeats: 200, price: 1299.99 },
+            { flightNumber: "MS21", departure: "Mumbai", destination: "Singapore", departureTime: "1:00 AM", arrivalTime: "7:30 AM", availableSeats: 150, price: 1499.99 }
+        ];
+
+        function displayFlights(flights, container) {
+            container.innerHTML = "";
+            if (flights.length === 0) {
+                container.textContent = "No flights found.";
+                return;
+            }
+            flights.forEach(flight => {
+                const div = document.createElement("div");
+                div.className = "flight-card bg-gray-700 rounded-xl shadow p-4 hover:shadow-lg transition cursor-pointer text-white";
+                div.innerHTML = `
+                    <h3 class="text-lg font-semibold mb-2">${flight.flightNumber}</h3>
+                    <p><strong>From:</strong> ${flight.departure} <strong>To:</strong> ${flight.destination}</p>
+                    <p><strong>Departure:</strong> ${flight.departureTime} <strong>Arrival:</strong> ${flight.arrivalTime}</p>
+                    <p><strong>Available Seats:</strong> ${flight.availableSeats}</p>
+                    <p><strong>Price:</strong> $${flight.price.toFixed(2)}</p>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        document.getElementById("searchForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            const departure = event.target.departure.value.trim().toLowerCase();
+            const destination = event.target.destination.value.trim().toLowerCase();
+            const results = flightsData.filter(flight =>
+                flight.departure.toLowerCase() === departure &&
+                flight.destination.toLowerCase() === destination &&
+                flight.availableSeats > 0
+            );
+            const resultsContainer = document.getElementById("searchResults");
+            displayFlights(results, resultsContainer);
+        });
+
+        document.getElementById("reservationForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            const flightNumber = event.target.flightNumber.value.trim().toUpperCase();
+            const reservationResult = document.getElementById("reservationResult");
+            const flight = flightsData.find(f => f.flightNumber.toUpperCase() === flightNumber);
+            if (flight && flight.availableSeats > 0) {
+                flight.availableSeats -= 1;
+                reservationResult.textContent = `Reservation successful for flight ${flightNumber}!`;
+            } else {
+                reservationResult.textContent = `Reservation failed. Flight may be full or doesn't exist.`;
+            }
+        });
+
+        document.getElementById("showAllFlightsBtn").addEventListener("click", function() {
+            const allFlightsContainer = document.getElementById("allFlightsList");
+            displayFlights(flightsData, allFlightsContainer);
+        });
+    </script>
+</body>
+</html>

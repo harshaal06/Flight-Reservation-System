@@ -53,8 +53,8 @@ public class Flight {
 
     @Override
     public String toString() {
-        return "Flight " + flightNumber + ": " + departure + " → " + destination + 
+        return "Flight " + flightNumber + ": " + departure + " -> " + destination + 
                " (" + departureTime + "-" + arrivalTime + ")\n" +
-               "Seats: " + availableSeats + " | Price: ₹" + price;
+               "Available Seats: " + availableSeats + " | Price: Rs. " + price;
     }
 }
